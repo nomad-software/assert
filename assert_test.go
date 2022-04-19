@@ -1,6 +1,8 @@
 package assert
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestTrue(t *testing.T) {
 	True(t, true)
@@ -58,7 +60,21 @@ func TestEmpty(t *testing.T) {
 }
 
 func TestRegex(t *testing.T) {
-	Regex(t, "Mary had a little lamb.", "^Mary")
-	Regex(t, "Mary had a little lamb.", ".*little")
-	Regex(t, "Mary had a little lamb.", "Mary.*lamb\\.")
+	Match(t, "Mary had a little lamb.", "^Mary")
+	Match(t, "Mary had a little lamb.", ".*little")
+	Match(t, "Mary had a little lamb.", "Mary.*lamb\\.")
+}
+
+func TestApprox(t *testing.T) {
+	Approx(t, 0.0, -0.0, 0.00001)
+	Approx(t, -0.0, 0.0, 0.00001)
+
+	Approx(t, float32(0.0), float32(-0.0), 0.00001)
+	Approx(t, float32(-0.0), float32(0.0), 0.00001)
+
+	Approx(t, 2.0, 1.99, 0.01)
+	Approx(t, 1.99, 2.0, 0.01)
+
+	Approx(t, float32(2.0), float32(1.99), 0.01)
+	Approx(t, float32(1.99), float32(2.0), 0.01)
 }

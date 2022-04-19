@@ -88,13 +88,33 @@ func Empty[T any](t *testing.T, val []T) {
 	}
 }
 
-// Regex is a helper function to test if the passed string matches a regex.
-func Regex(t *testing.T, val string, pattern string) {
+// Match is a helper function to test if the passed string matches a regex.
+func Match(t *testing.T, val string, pattern string) {
 	t.Helper()
 
 	r := regexp.MustCompile(pattern)
 
 	if !r.MatchString(val) {
 		t.Errorf("failed asserting %v matches %v (pattern)\n", val, pattern)
+	}
+}
+
+// Approx is a helper function to test if the passed floating point numbers are
+// approximately equal.
+func Approx[T constraints.Float](t *testing.T, val T, expected T, epsilon T) {
+	t.Helper()
+
+	var approx bool
+
+	switch any(val).(type) {
+	case float32:
+		approx = approx32(float32(val), float32(expected), float32(epsilon))
+
+	default:
+		approx = approx64(float64(val), float64(expected), float64(epsilon))
+	}
+
+	if !approx {
+		t.Errorf("failed asserting %v approximately equals %v (expected)\n", val, expected)
 	}
 }
