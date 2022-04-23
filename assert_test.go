@@ -1,6 +1,7 @@
 package assert
 
 import (
+	"errors"
 	"testing"
 )
 
@@ -77,4 +78,8 @@ func TestApprox(t *testing.T) {
 
 	Approx(t, float32(2.0), float32(1.99), 0.01)
 	Approx(t, float32(1.99), float32(2.0), 0.01)
+}
+
+func TestError(t *testing.T) {
+	Error(t, errors.New("an error occured"), "an error occured")
 }

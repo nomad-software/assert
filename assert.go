@@ -30,7 +30,7 @@ func Eq[T comparable](t *testing.T, val T, expected T) {
 	t.Helper()
 
 	if val != expected {
-		t.Errorf("failed asserting %v == %v (expected)\n", val, expected)
+		t.Errorf("failed asserting '%v' == '%v' (expected)\n", val, expected)
 	}
 }
 
@@ -117,4 +117,15 @@ func Approx[T constraints.Float](t *testing.T, val T, expected T, epsilon T) {
 	if !approx {
 		t.Errorf("failed asserting %v approximately equals %v (expected)\n", val, expected)
 	}
+}
+
+// Error is a helper function to test if an error matches a string.
+func Error(t *testing.T, err error, expected string) {
+	t.Helper()
+
+	if err == nil {
+		t.Errorf("failed asserting error is not nil\n")
+	}
+
+	Eq(t, err.Error(), expected)
 }
