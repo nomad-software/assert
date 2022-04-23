@@ -6,6 +6,8 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
+// Approx64 returns true if the passed 64bit floats are within the passed
+// epsilon value of each other.
 func approx64(a float64, b float64, epsilon float64) bool {
 	if a == b {
 		return true
@@ -25,6 +27,8 @@ func approx64(a float64, b float64, epsilon float64) bool {
 	return diff/min(absA+absB, maxFloat) < epsilon
 }
 
+// Approx32 returns true if the passed 32bit floats are within the passed
+// epsilon value of each other.
 func approx32(a float32, b float32, epsilon float32) bool {
 	if a == b {
 		return true
@@ -44,6 +48,7 @@ func approx32(a float32, b float32, epsilon float32) bool {
 	return diff/min(absA+absB, maxFloat) < epsilon
 }
 
+// Abs returns the absolute value of the passed float.
 func abs[T constraints.Float](val T) T {
 	switch {
 	case val < 0:
@@ -54,6 +59,7 @@ func abs[T constraints.Float](val T) T {
 	return val
 }
 
+// Min returns the minimum of the two passed values.
 func min[T constraints.Ordered](x, y T) T {
 	if x < y {
 		return x
