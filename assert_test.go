@@ -3,6 +3,7 @@ package assert
 import (
 	"errors"
 	"testing"
+	"unsafe"
 )
 
 func TestTrue(t *testing.T) {
@@ -60,6 +61,14 @@ func TestEmpty(t *testing.T) {
 	Empty(t, []string{})
 }
 
+func TestContains(t *testing.T) {
+	Contains(t, []int{1, 2, 3, 4, 5}, 4)
+	Contains(t, []string{"foo", "bar", "baz", "qux"}, "baz")
+
+	c1 := make(chan string)
+	Contains(t, []chan string{c1}, c1)
+}
+
 func TestRegex(t *testing.T) {
 	Match(t, "Mary had a little lamb.", "^Mary")
 	Match(t, "Mary had a little lamb.", ".*little")
@@ -82,4 +91,52 @@ func TestApprox(t *testing.T) {
 
 func TestError(t *testing.T) {
 	Error(t, errors.New("an error occured"), "an error occured")
+}
+
+func TestNil(t *testing.T) {
+	Nil(t, nil)
+
+	var foo *int
+	Nil(t, foo)
+
+	var bar map[string]int
+	Nil(t, bar)
+
+	var baz []int
+	Nil(t, baz)
+
+	var qux chan int
+	Nil(t, qux)
+
+	var quux func()
+	Nil(t, quux)
+
+	var corge any
+	Nil(t, corge)
+
+	grault := unsafe.Pointer(uintptr(0))
+	Nil(t, grault)
+}
+
+func TestNotNil(t *testing.T) {
+	foo := 123
+	NotNil(t, &foo)
+
+	bar := make(map[string]int)
+	NotNil(t, bar)
+
+	baz := []int{1, 2, 3, 4, 5}
+	NotNil(t, baz)
+
+	qux := make(chan int)
+	NotNil(t, qux)
+
+	quux := func() {}
+	NotNil(t, quux)
+
+	corge := "corge"
+	NotNil(t, any(corge))
+
+	grault := unsafe.Pointer(uintptr(1337))
+	NotNil(t, grault)
 }

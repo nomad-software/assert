@@ -1,6 +1,7 @@
 package assert
 
 import (
+	"reflect"
 	"regexp"
 	"testing"
 
@@ -88,6 +89,20 @@ func Empty[T any](t *testing.T, val []T) {
 	}
 }
 
+// Contains is a helper fuction to test if the passed haystack array contains
+// the needle value.
+func Contains[T comparable](t *testing.T, hatstack []T, needle T) {
+	t.Helper()
+
+	for _, v := range hatstack {
+		if v == needle {
+			return
+		}
+	}
+
+	t.Errorf("failed asserting array contains %#v\n", needle)
+}
+
 // Match is a helper function to test if the passed string matches a regex.
 func Match(t *testing.T, val string, pattern string) {
 	t.Helper()
@@ -128,4 +143,38 @@ func Error(t *testing.T, err error, expected string) {
 	}
 
 	Eq(t, err.Error(), expected)
+}
+
+// Nil is a helper function to test if a value is nil.
+func Nil(t *testing.T, val any) {
+	t.Helper()
+
+	if val == nil {
+		return
+	}
+
+	switch reflect.TypeOf(val).Kind() {
+	case reflect.Chan, reflect.Func, reflect.Map, reflect.Pointer, reflect.UnsafePointer, reflect.Interface, reflect.Slice:
+		if reflect.ValueOf(val).IsNil() {
+			return
+		}
+	}
+
+	t.Errorf("failed asserting nil\n")
+}
+
+// NotNil is a helper function to test if a value is not nil.
+func NotNil(t *testing.T, val any) {
+	t.Helper()
+
+	if val == nil {
+		t.Errorf("failed asserting nil\n")
+	}
+
+	switch reflect.TypeOf(val).Kind() {
+	case reflect.Chan, reflect.Func, reflect.Map, reflect.Pointer, reflect.UnsafePointer, reflect.Interface, reflect.Slice:
+		if reflect.ValueOf(val).IsNil() {
+			t.Errorf("failed asserting nil\n")
+		}
+	}
 }
