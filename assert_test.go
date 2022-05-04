@@ -140,3 +140,8 @@ func TestNotNil(t *testing.T) {
 	grault := unsafe.Pointer(uintptr(1337))
 	NotNil(t, grault)
 }
+
+func TestPanic(t *testing.T) {
+	defer Panic(t)
+	panic("foo")
+}

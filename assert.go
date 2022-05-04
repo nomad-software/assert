@@ -178,3 +178,13 @@ func NotNil(t *testing.T, val any) {
 		}
 	}
 }
+
+// Panic is a helper function to test if a panic occurs.
+// This function should usually be called as a deferred function to test after
+// the panic has occurred.
+func Panic(t *testing.T) {
+	r := recover()
+	if r == nil {
+		t.Errorf("Failed asserting panic\n")
+	}
+}
